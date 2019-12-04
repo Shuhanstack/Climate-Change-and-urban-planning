@@ -64,6 +64,7 @@ Total sea level anomaly = tide + storm surge + climate variability (background +
 ```{r}
 library(tidyverse)
 library(kableExtra)
+library(here)
 ```
 
 
@@ -119,7 +120,7 @@ kable(test_cur,
 cur_flood_risk <- flood_cur %>% 
   filter(sea_level_cur > 5) %>% 
   group_by(tide_level_cur, storm_surge_cur) %>% 
-  summarize(flood_risk = n()/n,
+  summarize(flood_risk_cur = n()/n,
             true_mean = mean(true_mean_cur))
 
 kable(cur_flood_risk,
@@ -143,6 +144,49 @@ kable(cur_flood_risk,
     - 3m: 
         - low tide: `r cur_flood_risk[4, 3]*100`% of flood risk
         - high tide: `r cur_flood_risk[8, 3]*100`% of flood risk
+
+**visualize the flood risk**
+
+```{r}
+risk_high_cur <- cur_flood_risk %>% 
+  filter(tide_level_cur == 1.25)
+risk_low_cur <- cur_flood_risk %>% 
+  filter(tide_level_cur == -1.25)
+  
+risk_range_cur <- data_frame("storm_surge_cur" = risk_high_cur$storm_surge_cur,
+                             "high_tide_risk" = risk_high_cur$flood_risk_cur,
+                             "low_tide_risk" = risk_low_cur$flood_risk_cur)
+
+ggplot(data = risk_range_cur,
+       aes(x = storm_surge_cur)) +
+  geom_point(aes(y = high_tide_risk),
+             color = "darkblue") +
+  geom_point(aes(y = low_tide_risk),
+             color = "lightblue") +
+  geom_line(aes(y = high_tide_risk),
+             color = "darkblue") +
+  geom_line(aes(y = low_tide_risk),
+             color = "lightblue") +
+  geom_ribbon(aes(ymin = low_tide_risk,
+                  ymax = high_tide_risk),
+              fill = "blue",
+              alpha = 0.05) +
+  labs(x = "Storm Surge (meters)",
+       y = "Flood Risk",
+       title = "Flood risk without climate change in NYC") +
+  geom_text(x = 2.5, y = 0.08,
+            label = "Low tide",
+            color = "lightblue") +
+  geom_text(x = 1, y = 0.22,
+            label = "High tide",
+            color = "darkblue") +
+  geom_text(x = 2.5, y = 0.2,
+            label = "Flood risk region",
+            color = "blue") +
+  theme_minimal()
+
+ggsave(here::here("Current flood risk.jpg"), width = 6, height = 4)
+```
         
 #### Climate change in 2050
 
