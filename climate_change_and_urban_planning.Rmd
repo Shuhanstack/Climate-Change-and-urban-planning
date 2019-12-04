@@ -1,0 +1,48 @@
+---
+title: "climate change and urban planning"
+author: "Shuhan Song"
+date: "12/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Statistical Model to estimate flood risk in NYC
+
+**Assumptions**
+
+- local sea level is affected only by tidal variations, storm surge, and changes to the long-term mean.
+
+- use different fixed values of the tide level and storm surge
+
+- all other sea level variations follow a normal (Gaussian distribution)
+
+**Key variables** (meter)
+
+1. tidal variations
+
+  - zero point is halfway between the high and low tide level
+  
+  - ranges from -1.25 to 1.25 m
+  
+  - use high tide level 1.25m and high tide level -1.25 m to model flood risks
+
+2. storm surge
+
+  - 1 m 
+  
+  - 2 m 
+  
+  - 3 m
+
+3. changes to the long-term mean, which are caused by climate change (combining RCP 4.5 and RCP 8.5)
+
+
+
+4. background variations
+
+    - 
+
+
