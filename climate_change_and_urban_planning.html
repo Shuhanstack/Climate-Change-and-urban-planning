@@ -369,25 +369,44 @@ summary {
 </div>
 
 
-<div id="statistical-model-to-estimate-flood-risk-in-nyc" class="section level2">
-<h2>Statistical Model to estimate flood risk in NYC</h2>
-<div id="assumptions" class="section level3">
-<h3>Assumptions</h3>
+<div id="statistical-model-for-estimation-of-flood-risk-in-nyc" class="section level4">
+<h4>Statistical Model for estimation of flood risk in NYC</h4>
+<p><strong>Assumptions</strong></p>
 <ul>
 <li><p>local sea level is affected only by tidal variations, storm surge, and changes to the long-term mean.</p></li>
 <li><p>use different fixed values of the tide level and storm surge</p></li>
 <li><p>all other sea level variations follow a normal (Gaussian distribution)</p></li>
 </ul>
+<p><strong>Key variables</strong> (meter)</p>
+<p>current corrent normal sea level = 0</p>
 <ol style="list-style-type: decimal">
-<li><p>tidal variations</p></li>
-<li><p>storm surge</p></li>
-<li><p>changes to the long-term mean, which are caused by climate change (combining RCP 4.5 and RCP 8.5)</p></li>
+<li><p>tidal variations</p>
+<ul>
+<li><p>zero point is halfway between the high and low tide level</p></li>
+<li><p>ranges from -1.25 to 1.25 m</p></li>
+<li><p>use high tide level 1.25m and high tide level -1.25 m to model flood risks</p></li>
+</ul></li>
+<li><p>storm surge</p>
+<ul>
+<li><p>1 m</p></li>
+<li><p>2 m</p></li>
+<li><p>3 m</p></li>
+</ul></li>
+<li><p>changes to the long-term mean in 2050, which is caused by climate change (combining RCP 4.5 and RCP 8.5)</p>
+<ul>
+<li><p>Based on the report by New York City Panel on Climate Change (NPCC) which predicted RCP 4.5 and RCP 8.5 scenarios in 2050s</p></li>
+<li><p>low estimate (10th percentile): 7 inches</p></li>
+<li><p>middle estimate (25-75th percentile): 11-24 inches</p></li>
+<li><p>high estimate (90th percentile): 31 inches</p></li>
+</ul></li>
 <li><p>background variations</p>
 <ul>
-<li></li>
+<li>normally distributed with mean = 0 and stdv = 3</li>
 </ul></li>
 </ol>
-</div>
+<p><strong>Criteria for Flood event</strong></p>
+<p>Total sea level anomaly greater than 5m.</p>
+<p>Total sea level anomaly = tide + storm surge + climate variability (background + climate change)</p>
 </div>
 
 

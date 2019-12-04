@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#### Statistical Model to estimate flood risk in NYC
+#### Statistical Model for estimation of flood risk in NYC
 
 **Assumptions**
 
@@ -21,28 +21,41 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **Key variables** (meter)
 
+current corrent normal sea level = 0
+
 1. tidal variations
 
-  - zero point is halfway between the high and low tide level
+    - zero point is halfway between the high and low tide level
   
-  - ranges from -1.25 to 1.25 m
+    - ranges from -1.25 to 1.25 m
   
-  - use high tide level 1.25m and high tide level -1.25 m to model flood risks
+    - use high tide level 1.25m and high tide level -1.25 m to model flood risks
 
 2. storm surge
 
-  - 1 m 
+    - 1 m 
   
-  - 2 m 
+    - 2 m 
   
-  - 3 m
+    - 3 m
 
-3. changes to the long-term mean, which are caused by climate change (combining RCP 4.5 and RCP 8.5)
+3. changes to the long-term mean in 2050, which is caused by climate change (combining RCP 4.5 and RCP 8.5)
 
-
+    - Based on the report by New York City Panel on Climate Change (NPCC) which predicted RCP 4.5 and RCP 8.5 scenarios in 2050s
+  
+    - low estimate (10th percentile): 7 inches
+  
+    - middle estimate (25-75th percentile): 11-24 inches
+  
+    - high estimate (90th percentile): 31 inches
 
 4. background variations
 
-    - 
+    - normally distributed with mean = 0 and stdv = 3
 
+**Criteria for Flood event**
+
+Total sea level anomaly greater than 5m.
+
+Total sea level anomaly = tide + storm surge + climate variability (background + climate change)
 
