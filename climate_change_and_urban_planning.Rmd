@@ -63,57 +63,137 @@ Total sea level anomaly = tide + storm surge + climate variability (background +
 #### Model the model!
 ```{r}
 library(tidyverse)
+library(kableExtra)
 ```
 
 
 ```{r}
 # set up the variables
-
 tide_level <- c(-1.25, 1.25)
 
-storm_surge <- c(1, 2, 3)
+storm_surge <- c(0, 1, 2, 3)
 
 mean_2050 <- c(7, 11, 24, 31) * 0.0254 # conversion from inches to meters
 ```
 
-Normal condition:
+#### Current condition:
 
 ```{r}
+sea_level_cur <- 1
+tide_level_cur <- 1
+storm_surge_cur <- 1
+true_mean_cur <- 1
+n <- 5000
+m <- 1
 
-# calculate the mean sea level
-k <- 1
-mean_sea_level_normal <- 1
-for (i in 1 : length(storm_surge)){
-  for (j in 1 : length(tide_level)){
-    mean_sea_level_normal[k] <- storm_surge[i] + tide_level[j]
-    k <- k + 1
+for (j in 1:length(storm_surge)) {
+  for(t in 1:length(tide_level)){
+    for (i in 1:n){
+      sea_level_cur[m] <- storm_surge[j] + tide_level[t] + rnorm(1, mean = 0 , sd = 3)
+      tide_level_cur[m] <- tide_level[t]
+      storm_surge_cur[m] <- storm_surge[j]
+      true_mean_cur[m] <- storm_surge[j] + tide_level[t]
+      m = m+1
+      }
+    }
   }
-}
-```
 
-```{r}
-# add background variation to a list of sea level corresponding to each mean
-sea_level_normal <- 1
-n <- 10000
-for (j in 1:6) {
-for (i in 1:n){
-  sea_level_normal[i+n*(j-1)] <- mean_sea_level_normal[j] + rnorm(n, mean = 0 , sd = 3)
-}
-}
-
-# join tide level and storm to a dataframe
-tide <- rep(c(-1.25, 1.25), each = 3*n)
-storm <- rep(c(1, 2, 3, 1, 2, 3),  each = n)
-
-normal <-  data_frame("tide_level" = tide,
-                     "storm_surge" = storm,
-                     "sea_level" = sea_level_normal)
-
+flood_cur <- data_frame(tide_level_cur, storm_surge_cur, sea_level_cur, true_mean_cur)
 ```
 
 ```{r}
 # test the model
+test_cur <- flood_cur %>% 
+  group_by(tide_level_cur, storm_surge_cur) %>% 
+  summarize(mean = mean(sea_level_cur), 
+            true_mean = mean(true_mean_cur)
+            )
 
-normal %>% group_by(tide_level, storm_surge) %>% summarize(mean = mean(sea_level))
+kable(test_cur,
+      col.names = c("tide level", "storm surge", "mean", "true mean")) %>% 
+  kable_styling(bootstrap_options = "striped")
 ```
 
+```{r}
+# flood risk
+cur_flood_risk <- flood_cur %>% 
+  filter(sea_level_cur > 5) %>% 
+  group_by(tide_level_cur, storm_surge_cur) %>% 
+  summarize(flood_risk = n()/n,
+            true_mean = mean(true_mean_cur))
+
+kable(cur_flood_risk,
+      col.names = c("tide level", "storm surge", "flood risk", "true mean")) %>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+- The risk of flooding under normal conditions:
+    - low tide: `r cur_flood_risk[1, 3]*100`% of flood risk
+    - high tide: `r cur_flood_risk[5, 3]*100`% of flood risk
+
+- The risk of flooding with storm surge:
+    - 1m: 
+        - low tide: `r cur_flood_risk[2, 3]*100`% of flood risk
+        - high tide: `r cur_flood_risk[6, 3]*100`% of flood risk
+        
+    - 2m: 
+        - low tide: `r cur_flood_risk[3, 3]*100`% of flood risk
+        - high tide: `r cur_flood_risk[7, 3]*100`% of flood risk
+    
+    - 3m: 
+        - low tide: `r cur_flood_risk[4, 3]*100`% of flood risk
+        - high tide: `r cur_flood_risk[8, 3]*100`% of flood risk
+        
+#### Climate change in 2050
+
+```{r}
+sea_level_2050 <- 1
+tide_level_2050 <- 1
+storm_surge_2050 <- 1
+mean_sea_level_2050 <- 1
+true_mean_2050 <- 1
+n <- 5000
+m <- 1
+for (k in 1:length(mean_2050)) {
+  for (j in 1:length(storm_surge)) {
+    for(t in 1:length(tide_level)){
+      for (i in 1:n){
+        sea_level_2050[m] <- storm_surge[j] + tide_level[t] + rnorm(1, mean = mean_2050[k] , sd = 3)
+        tide_level_2050[m] <- tide_level[t]
+        storm_surge_2050[m] <- storm_surge[j]
+        mean_sea_level_2050[m] <- mean_2050[k]
+        true_mean_2050[m] <- storm_surge[j] + tide_level[t] + mean_2050[k]
+        m = m+1
+        }
+      }
+    }
+  }
+
+flood_2050 <- data_frame(mean_sea_level_2050, tide_level_2050, storm_surge_2050, sea_level_2050, true_mean_2050)
+```
+
+```{r}
+# test the model
+test_2050 <- flood_2050 %>% 
+  group_by(mean_sea_level_2050, tide_level_2050, storm_surge_2050) %>% 
+  summarize(mean = mean(sea_level_2050), 
+            true_mean = mean(true_mean_2050)
+            )
+kable(test_2050,
+      col.names = c("mean sea leve", "tide level", "storm surge", "mean", "true mean")) %>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r}
+# flood risk
+flood_risk_2050 <- flood_2050 %>% 
+  filter(sea_level_2050 > 5) %>% 
+  group_by(mean_sea_level_2050, tide_level_2050, storm_surge_2050) %>% 
+  summarize(flood_risk = n()/n,
+            true_mean = mean(true_mean_2050))
+
+kable(flood_risk_2050,
+      col.names = c("mean sea leve", "tide level", "storm surge", "flood risk", "true mean")) %>% 
+  kable_styling(bootstrap_options = "striped")
+```
