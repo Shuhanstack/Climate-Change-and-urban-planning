@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 #### Statistical Model for estimation of flood risk in NYC
@@ -58,4 +58,62 @@ current corrent normal sea level = 0
 Total sea level anomaly greater than 5m.
 
 Total sea level anomaly = tide + storm surge + climate variability (background + climate change)
+
+
+#### Model the model!
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+# set up the variables
+
+tide_level <- c(-1.25, 1.25)
+
+storm_surge <- c(1, 2, 3)
+
+mean_2050 <- c(7, 11, 24, 31) * 0.0254 # conversion from inches to meters
+```
+
+Normal condition:
+
+```{r}
+
+# calculate the mean sea level
+k <- 1
+mean_sea_level_normal <- 1
+for (i in 1 : length(storm_surge)){
+  for (j in 1 : length(tide_level)){
+    mean_sea_level_normal[k] <- storm_surge[i] + tide_level[j]
+    k <- k + 1
+  }
+}
+```
+
+```{r}
+# add background variation to a list of sea level corresponding to each mean
+sea_level_normal <- 1
+n <- 10000
+for (j in 1:6) {
+for (i in 1:n){
+  sea_level_normal[i+n*(j-1)] <- mean_sea_level_normal[j] + rnorm(n, mean = 0 , sd = 3)
+}
+}
+
+# join tide level and storm to a dataframe
+tide <- rep(c(-1.25, 1.25), each = 3*n)
+storm <- rep(c(1, 2, 3, 1, 2, 3),  each = n)
+
+normal <-  data_frame("tide_level" = tide,
+                     "storm_surge" = storm,
+                     "sea_level" = sea_level_normal)
+
+```
+
+```{r}
+# test the model
+
+normal %>% group_by(tide_level, storm_surge) %>% summarize(mean = mean(sea_level))
+```
 
