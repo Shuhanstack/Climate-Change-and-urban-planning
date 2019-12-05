@@ -1,0 +1,33 @@
+---
+title: "Use Improved Urban Planning to Reduce Flooding Risk under Climate Change"
+author: "Shuhan Song"
+date: "12/4/2019"
+output: word_document
+---
+
+### Background
+
+Climate change was a risk factor for flood events among coastal cities due to elevated sea levels. To estimate the background effects by climate change in New York City (NYC), I modeled flood risks both with and without climate change, under normal and different storm surge conditions, as well as low and high tide levels. I derived changes of baseline average sea levels in 2050s from the 2013 NYC Panel on Climate Change (NPCC) report (Rosenzweig et al. 2013). 
+
+
+### Statistical Model
+
+To model flooding risks, I defined flood events to occur when the total sea level is higher than 5 meters from the normal condition (sea level = 0m). I assumed that local sea level is only affected by tidal variations, storm surge, and long-term change due to global warming. To simplify the solution, I modeled with fixed values for storm surge (1m, 2m, 3m) and tide levels (high tide = 1.25m, low tide = -1.25m) and assumed normal distribution for background variations (standard deviation = 3m, mean without climate change = 0m). For mean sea level under warming conditions, I used 7 inches by low estimate (10th percentile), 11 inches and 24 inches by middle range (25th to 75th percentile), and 31 inches by high estimate (90th percentile).
+
+### Result and discussion
+
+Under normal conditions with no storm surge (Figure 1), flooding risk of low tide is 1.68% while that of high tide is 10.5%. When storm surge was 1 meters, there was a 3.96% flooding risk under low tide and 18.1% under high tide. When storm surge was 2 meters, there was a 8.04% flooding risk under low tide and 28.28% under high tide. And when storm surge was 3 meters, there was a 14.54% flooding risk under low tide and 40.26% under high tide. For the storm surge during Hurrican Sandy, which was about 2.9m, the corresponding low tide flooding risk was about 15% and high tide flooding risk was about 40%.
+
+Under climate change conditions (Figure 2), flooding risks increased basically for all scenarios. However, it was less serious under low tide when storm surge was zero, one or two meters, where flooding risks remained lower than 15% for all sea level percentiles. Even at high tide, flooding risks for lower storm surges were less than 40% which would not lead to situations as serious as Hurrican Sandy. However, when storm surge is as large as three meters, flooding risks under high tide could get more than 50% with the corresponding risk under low tide even reached 20%. Damages worse than Hurricane Sandy may take place causing worse economic loss to the city. 
+
+Apparently, controlling storm surge can efficiently reduce flooding risks in NYC under climate change. By drawing storm surge down to two meters, we lowered the chance of severe flooding damages. While people have taken actions to diminish the rate of climate change globally, sea level in the future will still be higher than today's level. Therefore, it is important to make urban planning and coastal restoration projects that will efficiently reduce storm surge level and be more resiliant in the NYC.
+
+### Uncertainty
+
+While the model provided responsible inferences, there were uncertainties on factors influencing sea levels. The changes in background mean sea level was projected following RCP 4.5 and RCP 8.5 while the reality in 2050s might be completely different than what we expected today. To keep up-to-date on strategic planning for urban flooding, it is necessary to continue performing prediction analysis following the most recent climate models as they evolve. Besides, the storm surge of two meters mentioned in this report could not be generalized into a fixed threshold for flooding risk in NYC. The model was a rough estimation and ignored other potential estimators. Future studies can try to compensate other factors such as population, urban infrastructures, and landscape change. 
+
+
+### Reference: 
+
+Rosenzweig, C., W. Solecki, H. College, R. Blake, M. Bowman, V. Gornitz, K. Jacob, P. Kinney, H. Kunreuther, Y. Kushnir, R. Leichenko, N. Lin, G. Nordenson, M. Oppenheimer, G. Yohe, R. Horton, C. Lead, L. Patrick, D. Bader, and S. Ali. (2013). *Climate Risk Information 2013: Observations, Climate Change, Projections, and Maps*. New York City Panel on Climate Change (NPCC2):38.
+

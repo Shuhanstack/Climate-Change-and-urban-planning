@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+set.seed(227)
 ```
 
 #### Statistical Model for estimation of flood risk in NYC
@@ -167,25 +169,19 @@ ggplot(data = risk_range_cur,
              color = "darkblue") +
   geom_line(aes(y = low_tide_risk),
              color = "lightblue") +
-  geom_ribbon(aes(ymin = low_tide_risk,
-                  ymax = high_tide_risk),
-              fill = "blue",
-              alpha = 0.05) +
   labs(x = "Storm Surge (meters)",
        y = "Flood Risk",
-       title = "Flood risk without climate change in NYC") +
+       title = "Figure 1: Flood risk without climate change in NYC") +
   geom_text(x = 2.5, y = 0.08,
             label = "Low tide",
             color = "lightblue") +
   geom_text(x = 1, y = 0.22,
             label = "High tide",
             color = "darkblue") +
-  geom_text(x = 2.5, y = 0.2,
-            label = "Flood risk region",
-            color = "blue") +
+  scale_y_continuous(limits = c(0, 0.5)) +
   theme_minimal()
 
-ggsave(here::here("Current flood risk.jpg"), width = 6, height = 4)
+ggsave(here::here("Current flood risk.jpg"), width = 4, height = 3)
 ```
         
 #### Climate change in 2050
@@ -241,3 +237,47 @@ kable(flood_risk_2050,
       col.names = c("mean sea leve", "tide level", "storm surge", "flood risk", "true mean")) %>% 
   kable_styling(bootstrap_options = "striped")
 ```
+
+```{r}
+risk_high_2050 <- flood_risk_2050 %>% 
+  filter(tide_level_2050 == 1.25)
+risk_low_2050 <- flood_risk_2050 %>% 
+  filter(tide_level_2050 == -1.25)
+
+ggplot() +
+  geom_point(data = risk_low_2050,
+             aes(x = storm_surge_2050,
+                 y = flood_risk),
+             color = "lightblue") +
+  geom_line(data = risk_low_2050,
+             aes(x = storm_surge_2050,
+                 y = flood_risk,
+                 linetype = as.factor(mean_sea_level_2050)),
+             color = "lightblue") +
+  geom_point(data = risk_high_2050,
+             aes(x = storm_surge_2050,
+                 y = flood_risk),
+             color = "darkblue") +
+  geom_line(data = risk_high_2050,
+             aes(x = storm_surge_2050,
+                 y = flood_risk,
+                 linetype = as.factor(mean_sea_level_2050)),
+             color = "darkblue") +
+  labs(x = "Storm Surge (meters)",
+       y = "Flood Risk",
+       title = "Figure 2: Flood risk with climate change in NYC") +
+  geom_text(data = risk_low_2050,
+            x = 2.5, y = 0.08,
+            label = "Low tide",
+            color = "lightblue") +
+  geom_text(data = risk_high_2050,
+            x = 1, y = 0.3,
+            label = "High tide",
+            color = "darkblue") + 
+  scale_linetype_discrete(name = "Mean sea levels \n percentiles",
+                          labels = c("10th", "25th", "75th", "90th")) +
+  theme_minimal()
+
+ggsave(here::here("Climate change flood risk.jpg"), width = 6, height = 3.6)
+```
+
